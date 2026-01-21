@@ -1,0 +1,30 @@
+{
+  "tests": [
+    {
+      "name": "Get teachers list",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "teachers": []
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Create teacher",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "create_teacher",
+        "username": "teacher1",
+        "password": "test123",
+        "full_name": "Учитель Тестов"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

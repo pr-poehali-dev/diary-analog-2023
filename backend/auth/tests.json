@@ -1,0 +1,37 @@
+{
+  "tests": [
+    {
+      "name": "Send SMS code",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "send_sms",
+        "phone": "+79991234567",
+        "role": "student"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "code": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Verify SMS code",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "verify_sms",
+        "phone": "+79991234567",
+        "code": "123456",
+        "role": "student",
+        "full_name": "Тестовый ученик"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
