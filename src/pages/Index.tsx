@@ -23,11 +23,14 @@ type Student = {
   rank: number;
 };
 
+type UserRole = 'student' | 'teacher' | 'director' | null;
+
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
-  const [step, setStep] = useState<'phone' | 'otp'>('phone');
+  const [step, setStep] = useState<'role' | 'phone' | 'otp'>('role');
+  const [userRole, setUserRole] = useState<UserRole>(null);
 
   const mockSubjects: Subject[] = [
     { name: 'Математика', grades: [5, 4, 5, 5, 4], average: 4.6, icon: 'Calculator' },
@@ -53,6 +56,11 @@ const Index = () => {
     }
   };
 
+  const handleRoleSelect = (role: UserRole) => {
+    setUserRole(role);
+    setStep('phone');
+  };
+
   const handleOtpComplete = (value: string) => {
     setOtp(value);
     if (value.length === 6) {
@@ -71,10 +79,62 @@ const Index = () => {
               <Icon name="GraduationCap" size={32} className="text-white" />
             </div>
             <CardTitle className="text-3xl">Электронный дневник</CardTitle>
-            <CardDescription>Войди через СМС-код</CardDescription>
+            <CardDescription>
+              {step === 'role' ? 'Выбери свою роль' : 'Войди через СМС-код'}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {step === 'phone' ? (
+            {step === 'role' ? (
+              <>
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => handleRoleSelect('student')}
+                    className="w-full h-20 text-lg"
+                    variant="outline"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+                        <Icon name="User" size={24} className="text-primary" />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-semibold">Ученик</div>
+                        <div className="text-sm text-muted-foreground">Просмотр оценок и рейтинга</div>
+                      </div>
+                    </div>
+                  </Button>
+                  <Button
+                    onClick={() => handleRoleSelect('teacher')}
+                    className="w-full h-20 text-lg"
+                    variant="outline"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-secondary/20 flex items-center justify-center">
+                        <Icon name="BookOpenCheck" size={24} className="text-secondary" />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-semibold">Учитель</div>
+                        <div className="text-sm text-muted-foreground">Выставление оценок</div>
+                      </div>
+                    </div>
+                  </Button>
+                  <Button
+                    onClick={() => handleRoleSelect('director')}
+                    className="w-full h-20 text-lg"
+                    variant="outline"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center">
+                        <Icon name="Crown" size={24} className="text-accent" />
+                      </div>
+                      <div className="text-left">
+                        <div className="font-semibold">Директор</div>
+                        <div className="text-sm text-muted-foreground">Полный доступ к системе</div>
+                      </div>
+                    </div>
+                  </Button>
+                </div>
+              </>
+            ) : step === 'phone' ? (
               <>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Номер телефона</label>
@@ -86,10 +146,16 @@ const Index = () => {
                     className="text-lg"
                   />
                 </div>
-                <Button onClick={handlePhoneSubmit} className="w-full" size="lg">
-                  Получить код
-                  <Icon name="ArrowRight" size={20} className="ml-2" />
-                </Button>
+                <div className="space-y-2">
+                  <Button onClick={handlePhoneSubmit} className="w-full" size="lg">
+                    Получить код
+                    <Icon name="ArrowRight" size={20} className="ml-2" />
+                  </Button>
+                  <Button variant="ghost" onClick={() => setStep('role')} className="w-full">
+                    <Icon name="ArrowLeft" size={20} className="mr-2" />
+                    Изменить роль
+                  </Button>
+                </div>
               </>
             ) : (
               <>
@@ -108,10 +174,15 @@ const Index = () => {
                     </InputOTP>
                   </div>
                 </div>
-                <Button variant="ghost" onClick={() => setStep('phone')} className="w-full">
-                  <Icon name="ArrowLeft" size={20} className="mr-2" />
-                  Изменить номер
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="ghost" onClick={() => setStep('role')} className="flex-1">
+                    <Icon name="ArrowLeft" size={20} className="mr-2" />
+                    Назад
+                  </Button>
+                  <Button variant="ghost" onClick={() => setStep('phone')} className="flex-1">
+                    Изменить номер
+                  </Button>
+                </div>
               </>
             )}
           </CardContent>
